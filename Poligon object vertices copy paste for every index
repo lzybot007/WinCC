@@ -1,0 +1,54 @@
+'This vba script allows us to made two poligon size similar by copying each index 
+Public Sub UpdateToolTipText() 'This function is used to copy the tool tip text of one object to another and replace Leg1 to Leg2 First selection and second selection
+
+    Dim Obj1 As HMIObject
+    Dim Obj2 As HMIObject
+    Dim Prop1 As HMIProperty
+    Dim Prop2 As HMIProperty
+    Dim GetSelectedObject()
+    Dim i
+    i = 0
+    For Each obj In ActiveDocument.Selection
+        i = i + 1
+        If i = 1 Then
+            Set Obj1 = obj
+        ElseIf i = 2 Then
+            Set Obj2 = obj
+        End If
+    
+    Next obj
+    Dim indexobj1, indexobj2
+    Dim x1, x2
+    Dim y1, y2
+    Dim j
+    Dim total_number_vertices, total_number_verticesobj1, total_number_verticesobj2
+    
+    total_number_verticesobj1 = Obj1.Properties("PointCount") ' Get total number of vertices of poligon 1 selected
+    total_number_verticesobj2 = Obj2.Properties("PointCount")
+    total_number_verticesobj2.value = total_number_verticesobj1.value
+    total_number_vertices = total_number_verticesobj1.value
+   
+    Set indexobj1 = Obj1.Properties("Index")
+    Set indexobj2 = Obj2.Properties("Index")
+    indexobj1.value = 1              'start with index 1
+    indexobj2.value = indexobj1.value 
+    
+    For j = 1 To total_number_vertices
+        
+        Set x1 = Obj1.Properties("ActualPointLeft")
+        Set y1 = Obj1.Properties("ActualPointTop")
+    
+        
+        Set x2 = Obj2.Properties("ActualPointLeft")
+        Set y2 = Obj2.Properties("ActualPointTop")
+    
+        x2.value = x1.value
+        y2.value = y1.value
+        
+        indexobj1.value = indexobj1.value + 1
+        indexobj2.value = indexobj1.value
+       
+    Next
+              
+
+End Sub
