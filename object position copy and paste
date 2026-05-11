@@ -1,0 +1,44 @@
+'Selection Script to copy and paste a tool tip by replacing the sub string "leg1" with "leg2"
+Public Sub UpdateToolTipText() 'This function is used to copy the tool tip text of one object to another and replace Leg1 to Leg2 First selection and second selection
+
+    Dim Obj1 As HMIObject
+    Dim Obj2 As HMIObject
+    Dim Prop1x As HMIProperty
+    Dim Prop1y As HMIProperty
+    Dim newProp1x As HMIProperty
+    Dim newProp1y As HMIProperty
+    
+    Dim GetSelectedObject()
+    Dim i, tempx, tempy
+    i = 0
+    For Each obj In ActiveDocument.Selection
+        i = i + 1
+        If i = 1 Then
+            Set Obj1 = obj
+        ElseIf i = 2 Then
+            Set Obj2 = obj
+        End If
+    
+    Next obj
+    Set Prop1x = Obj1.Properties("Left")
+    Set Prop1y = Obj1.Properties("Top")
+    tempx = Prop1x.value
+    tempy = Prop1y.value
+    
+    
+    i = 0
+    For Each obj In ActiveDocument.Selection
+        i = i + 1
+        If i = 1 Then
+            Set Obj1 = obj
+        ElseIf i = 2 Then
+            Set Obj2 = obj
+        End If
+        
+     Next obj
+    Set newProp1x = Obj1.Properties("Left")
+    Set newProp1y = Obj1.Properties("Top")
+    newProp1x.value = tempx
+    newProp1y.value = tempy
+    
+End Sub
