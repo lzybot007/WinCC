@@ -1,0 +1,50 @@
+Sub CreateApplicationMenus()
+
+    Dim objcheck As HMIMenu
+    On Error Resume Next
+    Set objcheck = Application.CustomMenus.Item("AppMenu1")
+
+    If objcheck Is Nothing Then ' Checks if the AppMenu1 key object already exists so that it does not open everytime we open a picture
+        MsgBox ("Executed")
+
+        'VBA3
+        'Declaration of menus...:
+        Dim objMenu1_Hello As HMIMenu
+        Dim objMenu2_Ola As HMIMenu
+        '
+        'Add menus. Parameters are "Position", "Key" and "DefaultLabel":
+        Set objMenu1_Hello = Application.CustomMenus.InsertMenu(1, "AppMenu1", "Hello")
+        Set objMenu2_Ola = Application.CustomMenus.InsertMenu(2, "AppMenu2", "Ola")
+
+        'Next lines add menu-items to userdefined menu.
+        'Parameters are "Position", "Key" and DefaultLabel:
+        Set objStartItem = objMenu1_Hello.MenuItems.InsertMenuItem(1, "mItem1_1", "start")
+        
+        Set objStopItem = objMenu1_Hello.MenuItems.InsertMenuItem(2, "mItem1_2", "stop")
+        '
+        'Adds seperator to menu ("Position", "Key")
+        Set objMenuItem1 = objMenu1_Hello.MenuItems.InsertSeparator(3, "mItem1_3")
+        '
+        'Adds a submenu into a userdefined menu
+        Set objSubMenu_ola = objMenu1_Hello.MenuItems.InsertSubMenu(4, "mItem1_4", "ola")
+        '
+        'Adds a menu-item into a submenu
+        Set objSubStart = objSubMenu_ola.SubMenu.InsertMenuItem(5, "mItem1_5", "start")
+        Set objSubStop = objSubMenu_ola.SubMenu.InsertMenuItem(6, "mItem1_6", "stop")
+        
+        Set objStartItem_ola = objMenu2_Ola.MenuItems.InsertMenuItem(1, "mItem_7", "start amigo")
+        Set objStopItem_ola = objMenu2_Ola.MenuItems.InsertMenuItem(1, "mItem_8", "stop amigo")
+        Application.ActiveDocument.CustomMenus(1).MenuItems(0).ShortCut = "Ctrl+G"
+    End If
+
+On Error GoTo ErrorHandler
+
+' Your menu creation code here...
+
+Exit Sub
+
+ErrorHandler:
+HMIRuntime.Trace "An error occurred: " & Err.Description, vbCritical
+Resume Next
+
+End Sub
