@@ -1,0 +1,9 @@
+'Private Sub Document_Opened(CancelForwarding As Boolean)
+'End Sub
+'MsgBox ("Picture was opened!")
+'Call ChangeCurrentDataLanguage
+'Call CreateApplicationMenus
+'Selection Script to copy and paste a tool tip by replacing the sub string "leg1" with "leg2"
+
+'End Sub
+
