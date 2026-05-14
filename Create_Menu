@@ -38,7 +38,7 @@ Sub CreateApplicationMenus()
     End If
 
 On Error GoTo ErrorHandler
-
+Application.CustomMenus("AppMenu1").MenuItems("mItem1_1").Macro = "UpdateToolTipText"
 ' Your menu creation code here...
 
 Exit Sub
