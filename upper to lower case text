@@ -1,0 +1,31 @@
+
+Public Sub UpdateToolTipText()
+
+   Dim Obj1 As HMIObject
+   Dim Prop1 As HMIProperty
+   Dim GetSelectedObject()
+   Dim i, proptype, lowertext, temp
+   i = 0
+   For Each obj In ActiveDocument.Selection
+        i = i + 1
+        If i = 1 Then
+            Set Obj1 = obj
+        End If
+   Next obj
+    proptype = TypeName(Obj1)
+    If proptype = "HMIStaticText" Then
+        Set Prop1 = Obj1.Properties("Text")
+        
+    Else
+         Set Prop1 = Obj1.Properties("Text")
+        
+    End If
+    temp = Prop1.value
+    lowertext = UCase(Left(temp, 1)) & LCase(Mid(temp, 2))
+    
+    Prop1.value = lowertext
+              
+
+              
+
+End Sub
