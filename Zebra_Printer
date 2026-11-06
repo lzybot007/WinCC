@@ -1,4 +1,4 @@
-'Project module for Zebra printer in VB- Script
+'Project module for Zebra printer(Manual Printing) in VB- Script
 Sub TOFLabel(Byval TextValue)
 
     Dim FSO
