@@ -1,0 +1,73 @@
+'Project module for Zebra printer in VB- Script
+Sub TOFLabel(Byval TextValue)
+
+    Dim FSO
+    Dim TemplateFile
+    Dim OutputFile
+    Dim FileContent
+    Dim TabTagIdentifier
+    Dim TabTagManu
+    Dim i
+    Dim strqr
+    
+    '*Placeholder* all the placeholders which has to be replaced in the file(label.prn) with the current value from the tags
+    TabTagIdentifier = Array("*WONumber*","*ProductCode*", "*Width*", "*Length*","*Thickness*",_
+    	"*EdgeType*", "*Stack_Number*", "*NoOfBoards*", "*RecipeType*", "*Leg_Number*" )
+	
+	TabTagManu = Array("TOFMANLBL_WONumber","TOFMANLBL_ProductCode", "TOFMANLBL_Width",_
+		"TOFMANLBL_Length", "TOFMANLBL_Thickness","TOFMANLBL_EdgeType",_
+			"TOFMANLBL_Stack_Number", "TOFMANLBL_NoOfBoards", "TOFMANLBL_RecipeType", "TOFMANLBL_Leg_Number"   )
+			
+	'QR_Code text in the label 
+	strqr = HMIRuntime.Tags("Cut_ActFab_FabData_ArticleCode").Read() &  HMIRuntime.Tags("TOFMANLBL_EdgeType").Read()_
+	        & "||" & HMIRuntime.Tags("TOFMANLBL_NoOfBoards").Read() & "||" & HMIRuntime.Tags("TOFMANLBL_WONumber").Read()_
+	        & "||" & HMIRuntime.Tags("TOFMANLBL_Leg_Number").Read() & "||" & HMIRuntime.Tags("TOFMANLBL_Stack_Number").Read()_
+	        & "||" & Now()
+	
+	HMIRuntime.Trace strqr
+	
+   'File paths
+   TemplateFile = "D:\Print\label.prn"
+   OutputFile = "D:\Print\label_output.prn"
+
+   'Create File System Object
+   Set FSO = CreateObject("Scripting.FileSystemObject")
+
+   'Read original PRN file
+   Set FObj = FSO.OpenTextFile(TemplateFile, 1)
+   FileContent = FObj.ReadAll()
+   FObj.Close
+   i=0
+   'Replace *placeholder* text with the value from the tags
+   For Each item In TabTagManu
+    	strval = HMIRuntime.Tags(TabTagManu(i)).Read()
+    	HMIRuntime.Trace HMIRuntime.Tags(TabTagManu(i)).Read()
+    	HMIRuntime.Trace TabTagIdentifier(i)
+    	FileContent = Replace(FileContent,TabTagIdentifier(i), strval)
+    	i=i+1
+   Next	
+   FileContent = Replace(FileContent,"*QR_CODE*", strqr)
+   FileContent = Replace(FileContent,"*Date*", Now())
+   
+    'Save modified PRN file
+    Set FObj = FSO.OpenTextFile(OutputFile, 2, True)
+    FObj.Write FileContent
+    FObj.Close
+
+    Set FObj = Nothing
+    Set FSO = Nothing
+    
+'---------Script To print using the modified .prn file from cmd----------    
+Set WshShell = CreateObject("WScript.Shell")
+
+Command = "cmd /c copy /B " & _
+          """D:\Print\label_output.prn"" " & _
+          """\\localhost\ZDesigner ZT421-300dpi ZPL"""
+
+WshShell.Run Command, 0, True
+
+Set WshShell = Nothing
+    
+
+
+End Sub
